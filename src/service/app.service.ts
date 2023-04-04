@@ -7,7 +7,7 @@ import { BrowserService } from './browser.service';
 export class AppService {
   constructor(private readonly browserService: BrowserService) {}
 
-  async search(payload: RequestDto): Promise<ResponseDto> {
+  async search(payload: RequestDto): Promise<ResponseDto[]> {
     return this.browserService.getSearchInfos();
   }
 }
