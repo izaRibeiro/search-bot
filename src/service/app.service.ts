@@ -8,6 +8,6 @@ export class AppService {
   constructor(private readonly browserService: BrowserService) {}
 
   async search(payload: RequestDto): Promise<ResponseDto[]> {
-    return this.browserService.getSearchInfos();
+    return this.browserService.getSearchInfos(payload);
   }
 }

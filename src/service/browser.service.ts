@@ -1,6 +1,7 @@
-import { ResponseDto } from './../dto/response.dto';
 import { Injectable } from '@nestjs/common';
 import puppeteer from 'puppeteer';
+import { RequestDto } from './../dto/request.dto';
+import { ResponseDto } from './../dto/response.dto';
 
 const NAME_SELECTOR = 'quartoNome ';
 const DESCRIPTION_SELECTOR = 'quartoDescricao';
@@ -9,11 +10,16 @@ const IMAGE_SELECTOR = '.room--image';
 
 @Injectable()
 export class BrowserService {
-  async getSearchInfos(): Promise<ResponseDto[]> {
+  async getSearchInfos(payload: RequestDto): Promise<ResponseDto[]> {
     const browser = await puppeteer.launch({});
     const page = await browser.newPage();
+    
     await page.goto(
-      'https://pratagy.letsbook.com.br/D/Reserva?checkin=15%2F05%2F2023&checkout=18%2F05%2F2023&cidade=&hotel=12&adultos=1&criancas=&destino=Pratagy+Beach+Resort+All+Inclusive&promocode=&tarifa=&mesCalendario=4%2F1%2F2023',
+      `https://pratagy.letsbook.com.br/D/Reserva?checkin=${this.getDate(
+        payload.checkin,
+      )}&checkout=${this.getDate(
+        payload.checkout,
+      )}&cidade=&hotel=12&adultos=1&criancas=&destino=Pratagy+Beach+Resort+All+Inclusive`,
     );
 
     const names = await this.getTextElements(page, NAME_SELECTOR);
@@ -31,6 +37,14 @@ export class BrowserService {
 
       return response;
     });
+  }
+
+  private getDate(date: string) {
+    const convertedDate = new Date(date);
+
+    return `${convertedDate.getUTCDate()}%2F${
+      convertedDate.getUTCMonth() + 1
+    }%2F${convertedDate.getUTCFullYear()}`;
   }
 
   private async getImages(page: any) {
