@@ -17,7 +17,7 @@ async function bootstrap() {
     .setDescription(
       'Boot focused on looking for personalized information according to your preferred date',
     )
-    .setVersion('1.0')
+         .setVersion('1.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

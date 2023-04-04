@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import puppeteer from 'puppeteer';
+import puppeteer, { Page } from 'puppeteer';
 import { RequestDto } from './../dto/request.dto';
 import { ResponseDto } from './../dto/response.dto';
 
@@ -29,9 +29,9 @@ export class BrowserService {
 
     return names.map((element, index) => {
       const response = new ResponseDto();
-
+      
       response.name = names[index];
-      response.description = descriptions[index];
+      response.description = this.formatString(descriptions[index]);
       response.price = prices[index];
       response.image = images[index];
 
@@ -39,7 +39,7 @@ export class BrowserService {
     });
   }
 
-  private getDate(date: string) {
+  private getDate(date: string): string {
     const convertedDate = new Date(date);
 
     return `${convertedDate.getUTCDate()}%2F${
@@ -47,7 +47,7 @@ export class BrowserService {
     }%2F${convertedDate.getUTCFullYear()}`;
   }
 
-  private async getImages(page: any) {
+  private async getImages(page: Page): Promise<Array<string>> {
     return page.evaluate((IMAGE_SELECTOR) => {
       return Array.from(document.querySelectorAll(IMAGE_SELECTOR), (element) =>
         element.getAttribute('data-src'),
@@ -55,12 +55,16 @@ export class BrowserService {
     }, IMAGE_SELECTOR);
   }
 
-  private async getTextElements(page: any, classSelector: string) {
+  private async getTextElements(page: Page, classSelector: string): Promise<Array<string>> {
     return page.evaluate((classSelector) => {
       return Array.from(
         document.querySelectorAll(classSelector),
         (element) => element.textContent,
       );
     }, classSelector);
+  }
+
+  private formatString(text: string): string {
+    return text.replace(/^\s+|\s+$/g, '');
   }
 }
