@@ -8,7 +8,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Post()
-  getHello(@Body() payload: RequestDto): ResponseDto {
+  getHello(@Body() payload: RequestDto): Promise<ResponseDto> {
     return this.appService.search(payload);
   }
 }
