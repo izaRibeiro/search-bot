@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiOkResponse } from '@nestjs/swagger';
 import { RequestDto } from '../dto/request.dto';
 import { AppService } from '../service/app.service';
 import { ResponseDto } from './../dto/response.dto';
@@ -7,7 +8,12 @@ import { ResponseDto } from './../dto/response.dto';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post()
+  @Post('search')
+  @ApiOkResponse({
+    description: 'Response',
+    type: ResponseDto,
+    isArray: true,
+  })
   getHello(@Body() payload: RequestDto): Promise<ResponseDto[]> {
     return this.appService.search(payload);
   }
