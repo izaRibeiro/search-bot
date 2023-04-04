@@ -3,9 +3,9 @@ import puppeteer from 'puppeteer';
 import { RequestDto } from './../dto/request.dto';
 import { ResponseDto } from './../dto/response.dto';
 
-const NAME_SELECTOR = 'quartoNome ';
-const DESCRIPTION_SELECTOR = 'quartoDescricao';
-const PRICE_SELECTOR = 'valorFinal valorFinalDiscounted';
+const NAME_SELECTOR = '.quartoNome ';
+const DESCRIPTION_SELECTOR = '.quartoDescricao';
+const PRICE_SELECTOR = '.valorFinal';
 const IMAGE_SELECTOR = '.room--image';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class BrowserService {
     const page = await browser.newPage();
     
     await page.goto(
-      `https://pratagy.letsbook.com.br/D/Reserva?checkin=${this.getDate(
+      `${process.env.SITE_URL}?checkin=${this.getDate(
         payload.checkin,
       )}&checkout=${this.getDate(
         payload.checkout,
@@ -27,7 +27,7 @@ export class BrowserService {
     const prices = await this.getTextElements(page, PRICE_SELECTOR);
     const images = await this.getImages(page);
 
-    return prices.map((element, index) => {
+    return names.map((element, index) => {
       const response = new ResponseDto();
 
       response.name = names[index];
@@ -58,7 +58,7 @@ export class BrowserService {
   private async getTextElements(page: any, classSelector: string) {
     return page.evaluate((classSelector) => {
       return Array.from(
-        document.querySelectorAll(`[class='${classSelector}']`),
+        document.querySelectorAll(classSelector),
         (element) => element.textContent,
       );
     }, classSelector);
