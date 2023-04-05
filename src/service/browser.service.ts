@@ -11,9 +11,12 @@ const IMAGE_SELECTOR = '.room--image';
 @Injectable()
 export class BrowserService {
   async getSearchInfos(payload: RequestDto): Promise<ResponseDto[]> {
-    const browser = await puppeteer.launch({});
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox'],
+      executablePath: process.env.CHROME_PATH,
+    });
     const page = await browser.newPage();
-    
+
     await page.goto(
       `${process.env.SITE_URL}?checkin=${this.getDate(
         payload.checkin,
@@ -29,7 +32,7 @@ export class BrowserService {
 
     return names.map((element, index) => {
       const response = new ResponseDto();
-      
+
       response.name = names[index];
       response.description = this.formatString(descriptions[index]);
       response.price = prices[index];
@@ -55,7 +58,10 @@ export class BrowserService {
     }, IMAGE_SELECTOR);
   }
 
-  private async getTextElements(page: Page, classSelector: string): Promise<Array<string>> {
+  private async getTextElements(
+    page: Page,
+    classSelector: string,
+  ): Promise<Array<string>> {
     return page.evaluate((classSelector) => {
       return Array.from(
         document.querySelectorAll(classSelector),
