@@ -14,7 +14,7 @@ export class AppController {
     type: ResponseDto,
     isArray: true,
   })
-  getHello(@Body() payload: RequestDto): Promise<ResponseDto[]> {
+  search(@Body() payload: RequestDto): Promise<ResponseDto[]> {
     return this.appService.search(payload);
   }
 }
