@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import puppeteer, { Page } from 'puppeteer';
 import { RequestDto } from './../dto/request.dto';
 import { ResponseDto } from './../dto/response.dto';
@@ -29,6 +29,10 @@ export class BrowserService {
     const descriptions = await this.getTextElements(page, DESCRIPTION_SELECTOR);
     const prices = await this.getTextElements(page, PRICE_SELECTOR);
     const images = await this.getImages(page);
+    
+    if(!names.length) {
+      throw new HttpException('No Content', HttpStatus.NO_CONTENT);
+    }
 
     return names.map((element, index) => {
       const response = new ResponseDto();
