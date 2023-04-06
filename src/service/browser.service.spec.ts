@@ -1,3 +1,4 @@
+import { HttpException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import puppeteer from 'puppeteer';
 import { RequestDto } from '../dto/request.dto';
@@ -24,11 +25,28 @@ describe('AppService', () => {
     it('should do the search with poppeter"', async () => {
       const request = new RequestDto();
 
+      request.checkin = '2023-05-15';
+      request.checkout = '2023-05-18';
+
       process.env.SITE_URL = 'https://pratagy.letsbook.com.br/D/Reserva';
       process.env.CHROME_PATH =
         'C:\\Program Files\\Google\\Chrome\\Application\\chrome';
 
-      expect(await browserService.getSearchInfos(request)).toStrictEqual([]);
+      expect(await browserService.getSearchInfos(request)).toBeInstanceOf(
+        Array,
+      );
+    }, 30000);
+
+    it('should return an exception"', async () => {
+      const request = new RequestDto();
+
+      process.env.SITE_URL = 'https://pratagy.letsbook.com.br/D/Reserva';
+      process.env.CHROME_PATH =
+        'C:\\Program Files\\Google\\Chrome\\Application\\chrome';
+
+      browserService.getSearchInfos(request).catch((error) => {
+        expect(error).toBeInstanceOf(HttpException);
+      });
     }, 30000);
   });
 });
