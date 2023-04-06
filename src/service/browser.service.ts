@@ -34,6 +34,8 @@ export class BrowserService {
       throw new HttpException('No Content', HttpStatus.NO_CONTENT);
     }
 
+    await browser.close();
+    
     return names.map((element, index) => {
       const response = new ResponseDto();
 
