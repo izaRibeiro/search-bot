@@ -59,6 +59,17 @@ $ http://localhost:{PORT}/api
 
 ```
 
+## ENV
+
+```bash
+
+PORT=
+SITE_URL=
+CHROME_PATH=
+CORS_ORIGIN=
+
+```
+
 ## Stay in touch
 
 - Author - [Izabella Ribeiro](https://github.com/izaRibeiro)
