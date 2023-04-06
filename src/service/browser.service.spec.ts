@@ -1,3 +1,4 @@
+import { ResponseDto } from './../dto/response.dto';
 import { HttpException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import puppeteer from 'puppeteer';
@@ -31,6 +32,8 @@ describe('AppService', () => {
       process.env.SITE_URL = 'https://pratagy.letsbook.com.br/D/Reserva';
       process.env.CHROME_PATH =
         'C:\\Program Files\\Google\\Chrome\\Application\\chrome';
+
+      jest.spyOn(BrowserService.prototype, 'getTextElements').mockImplementation(async () => ['field data']);
 
       expect(await browserService.getSearchInfos(request)).toBeInstanceOf(
         Array,

@@ -54,7 +54,7 @@ export class BrowserService {
     }%2F${convertedDate.getUTCFullYear()}`;
   }
 
-  private async getImages(page: Page): Promise<Array<string>> {
+  async getImages(page: Page): Promise<Array<string>> {
     return page.evaluate((IMAGE_SELECTOR) => {
       return Array.from(document.querySelectorAll(IMAGE_SELECTOR), (element) =>
         element.getAttribute('data-src'),
@@ -62,7 +62,7 @@ export class BrowserService {
     }, IMAGE_SELECTOR);
   }
 
-  private async getTextElements(
+  async getTextElements(
     page: Page,
     classSelector: string,
   ): Promise<Array<string>> {
